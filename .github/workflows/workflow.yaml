@@ -51,13 +51,18 @@ jobs:
           -d "name=Tests fallaron en GitHub Actions" \
           -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub."
 
-    - name: Run SonarCloud Analysis
-      if: always()
+    - name: SonarCloud Analysis
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-        mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+        curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+        unzip sonar-scanner.zip
+        export PATH="$PATH:$(pwd)/sonar-scanner-4.8.0.2856-linux/bin"
+        sonar-scanner \
           -Dsonar.projectKey=Alberto-mp_DevOps_MPS \
           -Dsonar.organization=alberto-mp \
-          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=$SONAR_TOKEN \
+          -Dsonar.sources=src \
+          -Dsonar.tests=src/test \
+          -Dsonar.java.binaries=target/classes
