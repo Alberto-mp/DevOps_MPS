@@ -10,7 +10,7 @@ public class SimpleMathTest {
     @Test
     public void testSumar() {
         SimpleMath math = new SimpleMath();
-        assertEquals(6, math.sumar(2, 3));
+        assertEquals(5, math.sumar(2, 3));
         assertEquals(-1, math.sumar(-2, 1));
     }
 

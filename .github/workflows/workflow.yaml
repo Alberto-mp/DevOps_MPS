@@ -1,4 +1,4 @@
-name: Java Tests in Docker
+name: Java Tests and SonarCloud Analysis
 
 on:
   push:
@@ -9,15 +9,40 @@ on:
       - main
 
 jobs:
-  test:
+  test-and-analyze:
     runs-on: ubuntu-latest
 
     steps:
     # 1. Checkout del código
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
 
-    # 2. Ejecutar los tests dentro de Docker
+    # 2. Configuración del entorno Java
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: 'zulu'  # Puedes usar 'temurin' o 'adopt' si lo prefieres.
+
+    # 3. Caché para dependencias de Maven
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    # 4. Caché para dependencias de SonarQube
+    - name: Cache SonarQube packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
+    # 5. Ejecutar los tests dentro de Docker
     - name: Run tests in Docker
       id: test
       run: |
@@ -27,7 +52,7 @@ jobs:
           maven:3.8.5-openjdk-17 mvn clean test
       continue-on-error: true
 
-    # 3. Crear tarjeta en Trello si los tests fallan
+    # 6. Crear tarjeta en Trello si los tests fallan
     - name: Create Trello card on failure
       if: ${{ steps.test.outcome == 'failure' }}
       run: |
@@ -37,3 +62,15 @@ jobs:
           -d "idList=674a3f456fa1777794ac97ce" \
           -d "name=Tests fallaron en GitHub Actions" \
           -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub."
+
+    # 7. Ejecutar análisis en SonarCloud
+    - name: Run SonarCloud Analysis
+      if: always()  # Ejecutar siempre, incluso si los tests fallan
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Necesario para PRs
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Token de SonarCloud configurado en Secrets
+      run: |
+        mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=Alberto-mp_DevOps_MPS \
+          -Dsonar.organization=<SONAR_ORGANIZATION> \
+          -Dsonar.host.url=https://sonarcloud.io
