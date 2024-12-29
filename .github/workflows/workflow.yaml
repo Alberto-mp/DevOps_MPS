@@ -16,15 +16,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Run Tests and SonarCloud in Docker
+    - name: Run SonarCloud Analysis in Docker
       run: |
         docker run --rm \
           -v "$PWD":/usr/src/app \
           -w /usr/src/app \
           maven:3.8.5-openjdk-17-slim bash -c "
             apt-get update &&
-            apt-get install -y unzip &&
-            mvn clean verify &&
+            apt-get install -y unzip curl &&
             curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip &&
             unzip sonar-scanner.zip &&
             ./sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
@@ -35,3 +34,13 @@ jobs:
               -Dsonar.sources=src \
               -Dsonar.tests=src/test \
               -Dsonar.java.binaries=target/classes"
+
+    - name: Run Tests in Docker
+      run: |
+        docker run --rm \
+          -v "$PWD":/usr/src/app \
+          -w /usr/src/app \
+          maven:3.8.5-openjdk-17-slim bash -c "
+            apt-get update &&
+            apt-get install -y curl &&
+            mvn clean verify"
