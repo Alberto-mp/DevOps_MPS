@@ -49,11 +49,11 @@ jobs:
         restore-keys: ${{ runner.os }}-sonar
 
 
-    # 9. Limpieza y compilación
+    # 7. Limpieza y compilación
     - name: Clean and Compile
       run: mvn clean compile
 
-    # 10. Ejecutar análisis en SonarCloud
+    # 8. Ejecutar análisis en SonarCloud
     - name: Run SonarCloud Analysis
       if: always()
       env:
@@ -64,10 +64,10 @@ jobs:
           -Dsonar.projectKey=Alberto-mp_DevOps_MPS \
           -Dsonar.organization=alberto-mp \
           -Dsonar.host.url=https://sonarcloud.io
-# 9. Limpieza y compilación
+    # 9. Limpieza y compilación
     - name: Clean and Compile
       run: mvn clean compile
-    # 7. Ejecutar los tests dentro de Docker
+    # 10. Ejecutar los tests dentro de Docker
     - name: Run tests in Docker
       run: |
         docker run --rm \
@@ -78,7 +78,7 @@ jobs:
       continue-on-error: true
 
 
-    # 8. Crear tarjeta en Trello si los tests fallan
+    # 11. Crear tarjeta en Trello si los tests fallan
     - name: Create Trello card on failure
       if: ${{ steps.test.outcome == 'failure' }}
       run: |
