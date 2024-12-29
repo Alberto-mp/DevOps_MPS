@@ -21,7 +21,7 @@ jobs:
         docker run --rm \
           -v "$PWD":/usr/src/app \
           -w /usr/src/app \
-          maven:3.8.5-openjdk-17 bash -c "
+          maven:3.8.5-openjdk-17-slim bash -c "
             apt-get update &&
             apt-get install -y unzip &&
             mvn clean verify &&
