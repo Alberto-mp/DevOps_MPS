@@ -16,23 +16,22 @@ jobs:
     # 1. Checkout del código
     - name: Checkout repository
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
 
     # 2. Configuración del entorno Java
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: 17
-        distribution: 'zulu'  # Puedes usar 'temurin' o 'adopt' si lo prefieres.
+        distribution: 'zulu'
 
-    # 3. Caché para dependencias de Maven
+    # 3. Caché para dependencias Maven
     - name: Cache Maven packages
       uses: actions/cache@v4
       with:
-        path: ~/.m2
+        path: ~/.m2/repository
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        restore-keys: |
+          ${{ runner.os }}-m2
 
     # 4. Caché para dependencias de SonarQube
     - name: Cache SonarQube packages
@@ -63,12 +62,16 @@ jobs:
           -d "name=Tests fallaron en GitHub Actions" \
           -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub."
 
-    # 7. Ejecutar análisis en SonarCloud
+    # 7. Limpieza y compilación
+    - name: Clean and Compile
+      run: mvn clean compile
+
+    # 8. Ejecutar análisis en SonarCloud
     - name: Run SonarCloud Analysis
-      if: always()  # Ejecutar siempre, incluso si los tests fallan
+      if: always()
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Necesario para PRs
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Token de SonarCloud configurado en Secrets
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.projectKey=Alberto-mp_DevOps_MPS \
