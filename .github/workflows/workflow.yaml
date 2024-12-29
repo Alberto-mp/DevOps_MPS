@@ -78,7 +78,7 @@ jobs:
       continue-on-error: true
 
 
-    # 11. Crear tarjeta en Trello si los tests fallan
+    # 11  . Crear tarjeta en Trello si los tests fallan
     - name: Create Trello card on failure
       if: ${{ steps.test.outcome == 'failure' }}
       run: |
