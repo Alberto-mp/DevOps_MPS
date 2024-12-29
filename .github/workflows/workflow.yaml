@@ -24,13 +24,13 @@ jobs:
         java-version: 17
         distribution: 'zulu'
 
-    # 3. Limpiar la caché de Maven (opcional)
-    - name: Clear Maven Cache
-      run: rm -rf ~/.m2/repository
-
-    # 4. Eliminar manualmente el directorio target
+    # 3. Eliminar manualmente el directorio target
     - name: Remove Target Directory
-      run: rm -rf target
+      run: rm -rf target || true
+
+    # 4. Arreglar permisos en el directorio target (opcional)
+    - name: Fix permissions for target directory
+      run: chmod -R 777 target || true
 
     # 5. Caché para dependencias Maven
     - name: Cache Maven packages
