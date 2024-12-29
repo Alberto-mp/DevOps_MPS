@@ -1,130 +1,157 @@
 package com.ejemplo;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class MatrixOperations {
 
-    // Colores para la consola
-    public static final String ROJO = "\033[1;31m";
-    public static final String VERDE = "\033[1;32m";
-    public static final String AMARILLO = "\033[1;33m";
-    public static final String AZUL = "\033[1;34m";
-    public static final String RESET = "\033[0m";
+    public static void sumarMatrices(int[][] m1, int[][] m2) {
+        if (m1 == null || m2 == null) {
+            registrarLog("Sumar matrices no realizada: una o ambas matrices no se han cargado correctamente");
+        } else {
+            int[][] resultado = new int[5][5];
 
-    public static void mostrarMenu() {
-        System.out.println("\n" + AZUL + "********** Menu de Operaciones **********" + RESET);
-        System.out.println(VERDE + "1. Sumar matrices" + RESET);
-        System.out.println(VERDE + "2. Restar matrices" + RESET);
-        System.out.println(VERDE + "3. Multiplicar matrices" + RESET);
-        System.out.println(VERDE + "4. Producto escalar" + RESET);
-        System.out.println(VERDE + "5. Operacion Matriz Simetrica" + RESET);
-        System.out.println(VERDE + "6. Operacion Matriz Traspuesta" + RESET);
-        System.out.println(AMARILLO + "7. Salir" + RESET);
-        System.out.println(AZUL + "*****************************************" + RESET + "\n");
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    resultado[i][j] = m1[i][j] + m2[i][j];
+                }
+            }
+
+            guardarMatrizEnFichero(resultado);
+            registrarLog("Sumar matrices realizada correctamente");
+        }
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int opcion;
+    public static void restarMatrices(int[][] m1, int[][] m2) {
+        if (m1 == null || m2 == null) {
+            registrarLog("Restar matrices no realizada: una o ambas matrices no se han cargado correctamente");
+        } else {
+            int[][] resultado = new int[5][5];
 
-        System.out.println("\n\n" + AZUL + "Bienvenido al programa de operaciones con matrices" + RESET);
-        System.out.println(VERDE + "Seleccione una opcion del menu:" + RESET);
-        registrarLog("Inicio del programa");
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    resultado[i][j] = m1[i][j] - m2[i][j];
+                }
+            }
 
-        while (true) {
-            mostrarMenu();
-            System.out.print(AMARILLO + "Ingrese su opcion: " + RESET);
-            opcion = scanner.nextInt();
+            guardarMatrizEnFichero(resultado);
+            registrarLog("Restar matrices realizada correctamente");
+        }
+    }
 
-            switch (opcion) {
-                case 1:
-                    System.out.println(VERDE + "Opcion seleccionada: Sumar matrices" + RESET);
-                    sumarMatrices(cargarMatriz("matriz1.txt"), cargarMatriz("matriz2.txt"));
-                    break;
-                case 2:
-                    System.out.println(VERDE + "Opcion seleccionada: Restar matrices" + RESET);
-                    restarMatrices(cargarMatriz("matriz1.txt"), cargarMatriz("matriz2.txt"));
-                    break;
-                case 3:
-                    System.out.println(VERDE + "Opcion seleccionada: Multiplicar matrices" + RESET);
-                    productoMatrices(cargarMatriz("matriz1.txt"), cargarMatriz("matriz2.txt"));
-                    break;
-                case 4:
-                    System.out.println(VERDE + "Opcion seleccionada: Producto escalar" + RESET);
-                    System.out.print(AMARILLO + "Introduce 1 si desea hacerlo de la matriz1 y cualquier otro valor si desea hacerlo de la matriz2: " + RESET);
-                    int x = scanner.nextInt();
-                    if (x == 1) {
-                        productoEscalar(cargarMatriz("matriz1.txt"));
-                    } else {
-                        productoEscalar(cargarMatriz("matriz2.txt"));
+    public static void productoMatrices(int[][] m1, int[][] m2) {
+        if (m1 == null || m2 == null) {
+            registrarLog("Producto de matrices no realizado: una o ambas matrices no se han cargado correctamente");
+        } else {
+            int[][] resultado = new int[5][5];
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    resultado[i][j] = 0;
+                    for (int k = 0; k < 5; k++) {
+                        resultado[i][j] += m1[i][k] * m2[k][j];
                     }
-                    break;
-                case 5:
-                    System.out.println(VERDE + "Opcion seleccionada: Operacion Matriz Simetrica" + RESET);
-                    System.out.print(AMARILLO + "Introduce 1 si desea hacerlo de la matriz1 y cualquier otro valor si desea hacerlo de la matriz2: " + RESET);
-                    int z = scanner.nextInt();
-                    if (z == 1) {
-                        matrizSimetrica(cargarMatriz("matriz1.txt"));
-                    } else {
-                        matrizSimetrica(cargarMatriz("matriz2.txt"));
+                }
+            }
+
+            guardarMatrizEnFichero(resultado);
+            registrarLog("Producto de matrices realizada correctamente");
+        }
+    }
+
+    public static void productoEscalar(int[][] m1) {
+        if (m1 == null) {
+            registrarLog("Producto escalar no realizado: matriz no cargada correctamente");
+        } else {
+            int[][] resultado = new int[5][5];
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("Introduce el valor del escalar: ");
+            int x = scanner.nextInt();
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    resultado[i][j] = m1[i][j] * x;
+                }
+            }
+
+            guardarMatrizEnFichero(resultado);
+            registrarLog("Producto escalar de matriz realizada correctamente");
+        }
+    }
+
+    public static void matrizSimetrica(int[][] m1) {
+        if (m1 == null) {
+            registrarLog("Comprobación de simetría no realizada: matriz no cargada correctamente");
+        } else {
+            boolean esSimetrica = true;
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = i + 1; j < 5; j++) {
+                    if (m1[i][j] != m1[j][i]) {
+                        esSimetrica = false;
+                        break;
                     }
-                    break;
-                case 6:
-                    System.out.println(VERDE + "Opcion seleccionada: Operacion Matriz Traspuesta" + RESET);
-                    System.out.print(AMARILLO + "Introduce 1 si desea hacerlo de la matriz1 y cualquier otro valor si desea hacerlo de la matriz2: " + RESET);
-                    int y = scanner.nextInt();
-                    if (y == 1) {
-                        matrizTraspuesta(cargarMatriz("matriz1.txt"));
-                    } else {
-                        matrizTraspuesta(cargarMatriz("matriz2.txt"));
-                    }
-                    break;
-                case 7:
-                    System.out.println(ROJO + "Saliendo del programa. Hasta luego!" + RESET);
-                    registrarLog("Fin del programa");
-                    scanner.close();
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println(ROJO + "Opcion no valida. Por favor, intente nuevamente." + RESET);
+                }
+                if (!esSimetrica) break;
+            }
+
+            if (esSimetrica) {
+                System.out.println("La matriz es simétrica");
+                registrarLog("La matriz es simétrica");
+            } else {
+                System.out.println("La matriz no es simétrica");
+                registrarLog("La matriz no es simétrica");
             }
         }
     }
 
-    // Métodos auxiliares simulados para la implementación completa
+    public static void matrizTraspuesta(int[][] m1) {
+        if (m1 == null) {
+            registrarLog("Calculo de la matriz traspuesta no realizado: matriz no cargada correctamente");
+        } else {
+            int[][] resultado = new int[5][5];
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    resultado[i][j] = m1[j][i];
+                }
+            }
+
+            guardarMatrizEnFichero(resultado);
+            registrarLog("Matriz traspuesta calculada y guardada correctamente");
+        }
+    }
+
+    public static void guardarMatrizEnFichero(int[][] matriz) {
+        if (matriz == null) {
+            System.out.println("Error: Matriz nula");
+            return;
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("resultado_matriz.txt"))) {
+            for (int[] fila : matriz) {
+                for (int valor : fila) {
+                    bw.write(valor + " ");
+                }
+                bw.newLine();
+            }
+
+            System.out.println("Matriz guardada correctamente en resultado_matriz.txt");
+        } catch (IOException e) {
+            System.err.println("Error al guardar la matriz: " + e.getMessage());
+        }
+    }
 
     public static void registrarLog(String mensaje) {
-        // Simula el registro de logs
-        System.out.println("Log: " + mensaje);
-    }
-
-    public static int[][] cargarMatriz(String archivo) {
-        // Simula la carga de una matriz desde un archivo
-        System.out.println("Cargando matriz desde: " + archivo);
-        return new int[3][3]; // Retorna una matriz de ejemplo
-    }
-
-    public static void sumarMatrices(int[][] matriz1, int[][] matriz2) {
-        System.out.println("Sumando matrices...");
-    }
-
-    public static void restarMatrices(int[][] matriz1, int[][] matriz2) {
-        System.out.println("Restando matrices...");
-    }
-
-    public static void productoMatrices(int[][] matriz1, int[][] matriz2) {
-        System.out.println("Multiplicando matrices...");
-    }
-
-    public static void productoEscalar(int[][] matriz) {
-        System.out.println("Realizando producto escalar...");
-    }
-
-    public static void matrizSimetrica(int[][] matriz) {
-        System.out.println("Verificando si la matriz es simetrica...");
-    }
-
-    public static void matrizTraspuesta(int[][] matriz) {
-        System.out.println("Calculando la traspuesta de la matriz...");
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("programa_log.txt", true))) {
+            String timestamp = java.time.LocalDateTime.now().toString();
+            bw.write("[" + timestamp + "] " + mensaje);
+            bw.newLine();
+        } catch (IOException e) {
+            System.err.println("Error al registrar log: " + e.getMessage());
+        }
     }
 }
