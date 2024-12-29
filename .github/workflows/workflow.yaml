@@ -34,6 +34,6 @@ jobs:
         curl -X POST "https://api.trello.com/1/cards" \
           -d "key=4adca9d33a83ad8b790803a2708d4ed2" \
           -d "token=ATTA4044abed2ee17b8d8aa75c30a70dbdaf1b0e258c568c0ad6f1124772570f0b3d592801CF" \
-          -d "idList=674a3eaa65c52157ad91b6b1" \
+          -d "idList=674a3f456fa1777794ac97ce" \
           -d "name=Tests fallaron en GitHub Actions" \
           -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub."
