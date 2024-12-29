@@ -22,14 +22,11 @@ jobs:
         java-version: 17
         distribution: 'zulu'
 
-    - name: Clean target directory
+    - name: Clean and prepare workspace
       run: |
         rm -rf target || true
         mkdir -p target
-
-    - name: Disable Maven caching
-      run: |
-        mvn clean compile -Dmaven.repo.local=/tmp/.m2/repository
+        chmod -R 777 target
 
     - name: Run tests in Docker
       id: test
@@ -37,11 +34,11 @@ jobs:
         docker run --rm \
           -v "$PWD":/usr/src/app \
           -w /usr/src/app \
-          maven:3.8.5-openjdk-17 mvn clean test -Dmaven.repo.local=/tmp/.m2/repository
+          maven:3.8.5-openjdk-17 mvn clean test
       continue-on-error: true
 
     - name: Create Trello card on failure
-      if: failure()
+      if: ${{ steps.test.outcome == 'failure' }}
       run: |
         curl -X POST "https://api.trello.com/1/cards" \
           -d "key=4adca9d33a83ad8b790803a2708d4ed2" \
@@ -50,17 +47,17 @@ jobs:
           -d "name=Tests fallaron en GitHub Actions" \
           -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub."
 
-    - name: Download SonarScanner
+    - name: Download and set up SonarScanner
       run: |
         curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-        unzip sonar-scanner.zip
-        export PATH="$PATH:$(pwd)/sonar-scanner-4.8.0.2856-linux/bin"
+        unzip -o sonar-scanner.zip
+        export PATH="$(pwd)/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
 
-    - name: Run SonarCloud Analysis
+    - name: SonarCloud Analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-        sonar-scanner \
+        ./sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
           -Dsonar.projectKey=Alberto-mp_DevOps_MPS \
           -Dsonar.organization=alberto-mp \
           -Dsonar.host.url=https://sonarcloud.io \
