@@ -29,11 +29,14 @@ jobs:
 
     # 3. Crear tarjeta en Trello si los tests fallan
     - name: Create Trello card on failure
-      if: failure()
+      if: ${{ steps.test.outcome == 'failure' }}
+      env:
+        TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+        TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
       run: |
         curl -X POST "https://api.trello.com/1/cards" \
-          -d "key=${{ secrets.TRELLO_API_KEY }}" \
-          -d "token=${{ secrets.TRELLO_TOKEN }}" \
-          -d "idList=<674a3eaa65c52157ad91b6b1>" \
+          -d "key=${TRELLO_API_KEY}" \
+          -d "token=${TRELLO_TOKEN}" \
+          -d "idList=674a3eaa65c52157ad91b6b1" \
           -d "name=Tests fallaron en GitHub Actions" \
-          -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub."
+          -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub: ${{ github.run_url }}"
