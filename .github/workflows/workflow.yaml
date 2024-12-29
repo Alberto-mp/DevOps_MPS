@@ -50,15 +50,15 @@ jobs:
         restore-keys: ${{ runner.os }}-sonar
 
     # 7. Ejecutar los tests dentro de Docker
-    - name: Run tests in Docker
-      id: test
-      run: |
-        docker run --rm \
-          -u $(id -u):$(id -g) \  # Ejecutar como usuario actual
-          -v "$PWD":/usr/src/app \
-          -w /usr/src/app \
-          maven:3.8.5-openjdk-17 mvn clean test
-      continue-on-error: true
+  - name: Run tests in Docker
+    id: test
+    run: |
+      docker run --rm \
+        -v "$PWD":/usr/src/app \
+        -w /usr/src/app \
+        maven:3.8.5-openjdk-17 mvn clean test
+    continue-on-error: true
+
 
     # 8. Crear tarjeta en Trello si los tests fallan
     - name: Create Trello card on failure
