@@ -29,7 +29,7 @@ jobs:
 
     # 3. Crear tarjeta en Trello si los tests fallan
     - name: Create Trello card on failure
-      if: failure()
+      if: ${{ steps.test.outcome == 'failure' }}
       run: |
         curl -X POST "https://api.trello.com/1/cards" \
           -d "key=4adca9d33a83ad8b790803a2708d4ed2" \
