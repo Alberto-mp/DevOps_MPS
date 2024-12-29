@@ -22,28 +22,15 @@ jobs:
         java-version: 17
         distribution: 'zulu'
 
-    - name: Force Remove Target Directory
+    - name: Force clean target directory
       run: |
         rm -rf target || true
         mkdir -p target
+        chmod -R 777 target
 
-    - name: Fix permissions for target directory
-      run: chmod -R 777 target || true
-
-    - name: Cache Maven packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-m2
-
-    - name: Cache SonarQube packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
+    - name: Disable Maven caching
+      run: |
+        mvn clean compile -Dmaven.clean.failOnError=false -Dmaven.repo.local=/tmp/.m2/repository
 
     - name: Run tests in Docker
       id: test
@@ -51,7 +38,7 @@ jobs:
         docker run --rm \
           -v "$PWD":/usr/src/app \
           -w /usr/src/app \
-          maven:3.8.5-openjdk-17 mvn clean test
+          maven:3.8.5-openjdk-17 mvn clean test -Dmaven.repo.local=/tmp/.m2/repository
       continue-on-error: true
 
     - name: Create Trello card on failure
@@ -63,9 +50,6 @@ jobs:
           -d "idList=674a3f456fa1777794ac97ce" \
           -d "name=Tests fallaron en GitHub Actions" \
           -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub."
-
-    - name: Clean and Compile
-      run: mvn clean compile -Dmaven.clean.failOnError=false
 
     - name: Run SonarCloud Analysis
       if: always()
