@@ -32,6 +32,7 @@ jobs:
     - name: Fix permissions for target directory
       run: chmod -R 777 target || true
 
+
     # 5. Caché para dependencias Maven
     - name: Cache Maven packages
       uses: actions/cache@v4
