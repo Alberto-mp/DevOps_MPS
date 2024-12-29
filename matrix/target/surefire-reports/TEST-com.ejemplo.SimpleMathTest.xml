@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.ejemplo.AppTest" time="0.07" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.ejemplo.SimpleMathTest" time="0.016" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="C:\Users\Alberto\Desktop\UNIVERSIDAD\4ºGII\MPS\Trabajo final\DevOps_MPS\matrix\target\test-classes;C:\Users\Alberto\Desktop\UNIVERSIDAD\4ºGII\MPS\Trabajo final\DevOps_MPS\matrix\target\classes;C:\Users\Alberto\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
+    <property name="java.class.path" value="C:\Users\Alberto\Desktop\UNIVERSIDAD\4ºGII\MPS\Trabajo final\DevOps_MPS\matrix\target\test-classes;C:\Users\Alberto\Desktop\UNIVERSIDAD\4ºGII\MPS\Trabajo final\DevOps_MPS\matrix\target\classes;C:\Users\Alberto\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.0\junit-jupiter-5.10.0.jar;C:\Users\Alberto\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.0\junit-jupiter-api-5.10.0.jar;C:\Users\Alberto\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Alberto\.m2\repository\org\junit\platform\junit-platform-commons\1.10.0\junit-platform-commons-1.10.0.jar;C:\Users\Alberto\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Alberto\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.0\junit-jupiter-params-5.10.0.jar;C:\Users\Alberto\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.0\junit-jupiter-engine-5.10.0.jar;C:\Users\Alberto\.m2\repository\org\junit\platform\junit-platform-engine\1.10.0\junit-platform-engine-1.10.0.jar;"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -15,9 +15,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="ES"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\Alberto\AppData\Local\Temp\surefire16184855015518893505\surefirebooter-20241229171113437_3.jar C:\Users\Alberto\AppData\Local\Temp\surefire16184855015518893505 2024-12-29T17-11-10_133-jvmRun1 surefire-20241229171113437_1tmp surefire_0-20241229171113437_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Alberto\AppData\Local\Temp\surefire4572585883078110498\surefirebooter-20241229175401913_3.jar C:\Users\Alberto\AppData\Local\Temp\surefire4572585883078110498 2024-12-29T17-54-01_437-jvmRun1 surefire-20241229175401913_1tmp surefire_0-20241229175401913_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="C:\Users\Alberto\Desktop\UNIVERSIDAD\4ºGII\MPS\Trabajo final\DevOps_MPS\matrix\target\test-classes;C:\Users\Alberto\Desktop\UNIVERSIDAD\4ºGII\MPS\Trabajo final\DevOps_MPS\matrix\target\classes;C:\Users\Alberto\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
+    <property name="surefire.test.class.path" value="C:\Users\Alberto\Desktop\UNIVERSIDAD\4ºGII\MPS\Trabajo final\DevOps_MPS\matrix\target\test-classes;C:\Users\Alberto\Desktop\UNIVERSIDAD\4ºGII\MPS\Trabajo final\DevOps_MPS\matrix\target\classes;C:\Users\Alberto\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.0\junit-jupiter-5.10.0.jar;C:\Users\Alberto\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.0\junit-jupiter-api-5.10.0.jar;C:\Users\Alberto\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Alberto\.m2\repository\org\junit\platform\junit-platform-commons\1.10.0\junit-platform-commons-1.10.0.jar;C:\Users\Alberto\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Alberto\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.0\junit-jupiter-params-5.10.0.jar;C:\Users\Alberto\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.0\junit-jupiter-engine-5.10.0.jar;C:\Users\Alberto\.m2\repository\org\junit\platform\junit-platform-engine\1.10.0\junit-platform-engine-1.10.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Alberto"/>
     <property name="user.language" value="es"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Alberto\AppData\Local\Temp\surefire16184855015518893505\surefirebooter-20241229171113437_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Alberto\AppData\Local\Temp\surefire4572585883078110498\surefirebooter-20241229175401913_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.8+9-LTS-211"/>
@@ -56,5 +56,8 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testApp" classname="com.ejemplo.AppTest" time="0.001"/>
+  <testcase name="testSumar" classname="com.ejemplo.SimpleMathTest" time="0.003"/>
+  <testcase name="testMultiplicar" classname="com.ejemplo.SimpleMathTest" time="0.001"/>
+  <testcase name="testDividir" classname="com.ejemplo.SimpleMathTest" time="0.002"/>
+  <testcase name="testRestar" classname="com.ejemplo.SimpleMathTest" time="0.001"/>
 </testsuite>
