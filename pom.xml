@@ -10,11 +10,12 @@
 
   <properties>
     <!-- Configuración de la versión de Java -->
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <sonar.organization>alberto-mp</sonar.organization>
+    <sonar.projectKey>Alberto-mp_DevOps_MPS</sonar.projectKey>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
 
@@ -38,6 +39,7 @@
         <configuration>
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
+          <useIncrementalCompilation>false</useIncrementalCompilation> <!-- Deshabilitar incremental compilation -->
         </configuration>
       </plugin>
 
@@ -47,7 +49,23 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.1.2</version>
       </plugin>
-      
+
+      <!-- Plugin de Sonar para análisis estático -->
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>3.9.1.2184</version>
+      </plugin>
+
+      <!-- Plugin para limpiar artefactos generados -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <failOnError>false</failOnError> <!-- Continuar aunque falle la limpieza -->
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
