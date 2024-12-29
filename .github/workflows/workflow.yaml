@@ -16,52 +16,28 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up JDK 17 for Maven and SonarScanner
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: 17
         distribution: 'zulu'
 
-    - name: Clean and prepare workspace
-      run: |
-        rm -rf target || true
-        mkdir -p target
-        chmod -R 777 target
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-m2
 
-    - name: Run tests in Docker
-      id: test
-      run: |
-        docker run --rm \
-          -v "$PWD":/usr/src/app \
-          -w /usr/src/app \
-          maven:3.8.5-openjdk-17 mvn clean test
-      continue-on-error: true
+    - name: Build project
+      run: mvn clean verify
 
-    - name: Create Trello card on failure
-      if: ${{ steps.test.outcome == 'failure' }}
-      run: |
-        curl -X POST "https://api.trello.com/1/cards" \
-          -d "key=4adca9d33a83ad8b790803a2708d4ed2" \
-          -d "token=ATTA4044abed2ee17b8d8aa75c30a70dbdaf1b0e258c568c0ad6f1124772570f0b3d592801CF" \
-          -d "idList=674a3f456fa1777794ac97ce" \
-          -d "name=Tests fallaron en GitHub Actions" \
-          -d "desc=Los tests fallaron en el último push. Revisa el workflow en GitHub."
-
-    - name: Download and set up SonarScanner
-      run: |
-        curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-        unzip -o sonar-scanner.zip
-        export PATH="$(pwd)/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
-
-    - name: SonarCloud Analysis
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1.9
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        ./sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
-          -Dsonar.projectKey=Alberto-mp_DevOps_MPS \
-          -Dsonar.organization=alberto-mp \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=$SONAR_TOKEN \
-          -Dsonar.sources=src \
-          -Dsonar.tests=src/test \
-          -Dsonar.java.binaries=target/classes
+      with:
+        args: >
+          -Dsonar.projectKey=Alberto-mp_DevOps_MPS
+          -Dsonar.organization=alberto-mp
